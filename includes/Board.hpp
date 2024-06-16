@@ -9,9 +9,9 @@ class Board
 	public:
 		List<const char *> move_list;
 		Board();
-		Board(std::string hex_setup);
+		Board(const char * hex_setup);
 		~Board();
-		void set(std::string hex_setup);		// Setup the Board with determined position
+		void set(const char *hex_setup);		// Setup the Board with determined position
 		void print(bool color);					// Print the Board, 0 for the white PoV - 1 for the black PoV
 		bool square_color(const char pos);
 		bool square_color(const char *pos);		// Get the color of a square

@@ -11,7 +11,7 @@ SRCS		= 	${addprefix ${SRCDIR}, ${SRCNAME}}
 OBJS		= 	${SRCS:.cpp=.o}
 
 CC			= 	g++ 
-CFLAGS 		=	-Wall  -Wextra
+CFLAGS 		=	-std=c++11 -Wall  -Wextra
 
 .cpp.o        :	${SRCS}
 				${CC} ${CFLAGS} -c -I ${INCDIR} $< -o ${<:.cpp=.o}

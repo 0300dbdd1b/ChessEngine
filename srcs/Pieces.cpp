@@ -1,26 +1,35 @@
 #include "../includes/Pieces.hpp"
+#include <cctype>
+#include <cstring>
 #include <iostream>
 
 using namespace std;
-bool Piece::decode(unsigned char hex_piece)
+bool Piece::decode(unsigned char c)
 {
-	std::string hex_str = "0123456789abcdef";
-	hex_piece = (char)(hex_str.find(hex_piece));
-	this->color = hex_piece & 1;
-	this->piece = hex_piece >> 1;
+	this->color = isupper(c);
+	const char *pos = strchr(PIECES, c);
+	if (pos)
+	{
+		this->piece = *pos;
+	}
+	else
+	{
+		this->piece = EMPTY;
+	}
 	return true;
 }
 
 Piece::Piece()
 {
-	this->piece = 0;
-	this->color = false;
+	this->piece = EMPTY;
+	this->color = WHITE;
 
 }
 
-Piece::Piece(unsigned char hex_piece)
+Piece::Piece(unsigned char c)
 {
-	this->decode(hex_piece);
+
+	this->decode(c);
 
 }
 

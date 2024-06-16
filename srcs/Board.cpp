@@ -1,5 +1,5 @@
 #include "../includes/Board.hpp"
-
+#include "../includes/Pieces.hpp"
 #include <iostream>
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdangling-gsl"
@@ -20,7 +20,7 @@ void Board::init()
 	
 }
 
-void Board::set(std::string hex_setup)
+void Board::set(const char *hex_setup)
 {
 	for (unsigned char i = 0; i < 64; i++)
 	{
@@ -28,36 +28,27 @@ void Board::set(std::string hex_setup)
 	}
 }
 
-Board::Board(std::string hex_setup)
+Board::Board(const char *hex_setup)
 {
 	set(hex_setup);
 }
 
 Board::Board()
 {
-	set("846ac648222222220000000000000000000000000000000033333333957bd759");
-	//set("	rnbqkbnr\
-	//		pppppppp\
-	//		........\
-	//		........\
-	//		........\
-	//		........\
-	//		PPPPPPPP\
-	//		RNBQKBNR");
+	set(BASEPOS);
 
 	init();
 }
 
 void Board::print(bool color)
 {
-	const std::string pieces_name = ".pnbrqk";
 	char display;
 	if (color == BLACK) // Print the board from black perspective
 	{
 		std::cout << "Black Perspective :" << std::endl;
 		for (unsigned char i = 0; i < 64; i++)
 		{
-			display = pieces_name[this->board[(int(i/8)*8) + 7-(i%8)].piece];
+			display = this->board[(int(i/8)*8) + 7-(i%8)].piece;
 			if (i%8 == 0)
 			{
 				if (i>0)
@@ -79,7 +70,7 @@ void Board::print(bool color)
 		std::cout << "White Perspective :" << std::endl;
 		for (unsigned char i = 64; i > 0 ; i--)
 		{
-			display = pieces_name[this->board[(int((i-1)/8)*8) + 7 -((i-1)%8)].piece];
+			display = this->board[(int((i-1)/8)*8) + 7 -((i-1)%8)].piece;
 			if (i%8 == 0)
 				std::cout << std::endl << int(i/8) << "| ";
 			if (this->board[(int((i-1)/8)*8) + 7 -((i-1)%8)].color == false)
@@ -94,8 +85,8 @@ void Board::print(bool color)
 
 bool Board::square_color(const char pos)
 {
-	unsigned char col = (unsigned char)int(pos%8) ;
-	unsigned char row = (unsigned char)int(pos/8) ;
+	unsigned char col = (char)int(pos%8) ;
+	unsigned char row = (char)int(pos/8) ;
 	if (row & 1)
 		return !(1 -(col & 1));
 	else
@@ -104,8 +95,8 @@ bool Board::square_color(const char pos)
 
 bool Board::square_color(const char *pos)
 {
-	unsigned char col = pos[0] - 'a';
-	unsigned char row = pos[1] - '0' - 1;
+	char col = pos[0] - 'a';
+	char row = pos[1] - '0' - 1;
 	if (row & 1)
 		return !(1 -(col & 1));
 	else
@@ -114,8 +105,8 @@ bool Board::square_color(const char *pos)
 
 Piece& Board::at(const char index)
 {
-	unsigned char row = index%8 + 'a';
-	unsigned char col = index/8 + '0' + 1;
+	char row = index%8 + 'a';
+	char col = index/8 + '0' + 1;
 	if ((index >= 64) || (index < 0))
 		return (this->at("a1"));
 	char pos[3] = {row,col,'\0'};
