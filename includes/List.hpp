@@ -1,7 +1,6 @@
 #ifndef __LIST__
 # define __LIST__
 # include <iostream>
-# include "./utils.hpp"
 
 template <class T> class list_item;
 template <class T> class List;

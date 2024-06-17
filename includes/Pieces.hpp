@@ -3,11 +3,11 @@
 # include <string>
 
 using namespace std;
-# include "./utils.hpp"
 
 #ifndef PIECES
 #define PIECES ".PRNBQKprnbqk" // Default value if not provided by the compiler
 #endif
+
 
 constexpr bool WHITE = false;
 constexpr bool BLACK = true;
@@ -35,6 +35,15 @@ constexpr char BASEPOS[] =
      EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
      BPAWN, BPAWN, BPAWN, BPAWN, BPAWN, BPAWN, BPAWN, BPAWN,
      BROOK, BKNIGHT, BBISHOP, BQUEEN, BKING, BBISHOP, BKNIGHT, BROOK};
+
+
+
+typedef struct s_move
+{
+	const unsigned char *from;
+	const unsigned char *to;
+}t_move;
+
 class Piece
 {
 	public:
@@ -45,6 +54,8 @@ class Piece
 	Piece(unsigned char c);
 	bool decode(unsigned char c);
 	Piece operator=(const Piece &piece);
+	void move(const t_move move);
+	t_move *get_knight_moves(const char *pos);
 };
 
 #endif

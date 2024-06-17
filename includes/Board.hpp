@@ -1,6 +1,7 @@
 #ifndef __BOARD__
 # define __BOARD__
 
+# include <cstring>
 # include "./Pieces.hpp"
 # include "./List.hpp"
 
@@ -9,9 +10,9 @@ class Board
 	public:
 		List<const char *> move_list;
 		Board();
-		Board(const char * hex_setup);
+		Board(const char *setup, const char info=0b01111);
 		~Board();
-		void set(const char *hex_setup);		// Setup the Board with determined position
+		void set(const char *setup, const char info=0b01111);		// Setup the Board with determined position
 		void print(bool color);					// Print the Board, 0 for the white PoV - 1 for the black PoV
 		bool square_color(const char pos);
 		bool square_color(const char *pos);		// Get the color of a square
@@ -19,10 +20,10 @@ class Board
 		Piece& at(const char *pos);				// Returns the Piece in a determined square	
 		Board& move(const char *move);
 		unsigned const char case_to_num(const char *pos);
-		unsigned const char *num_to_case(unsigned const char index);
+		unsigned const char *num_to_case(char index);
 		List<t_move>get_vertical_moves(const char *pos); 
 	private:
-		std::string hex_setup;
+		const char *hex_setup;
 		bool turn_to_move;
 		bool black_can_long_castle;
 		bool black_can_short_castle;

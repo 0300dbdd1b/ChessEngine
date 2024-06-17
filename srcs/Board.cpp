@@ -1,6 +1,9 @@
 #include "../includes/Board.hpp"
 #include "../includes/Pieces.hpp"
 #include <iostream>
+#include <string.h>
+#include <string>
+#include <cstdlib>
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdangling-gsl"
 
@@ -10,34 +13,40 @@ Board::~Board(void)
 	move_list.empty();
 }
 
-void Board::init()
-{
-	black_can_long_castle = true;
-	black_can_short_castle = true;
-	white_can_long_castle = true;
-	white_can_short_castle = true;
-	turn_to_move = WHITE;
-	
-}
 
-void Board::set(const char *hex_setup)
+void Board::set(const char *setup, const char info)
 {
 	for (unsigned char i = 0; i < 64; i++)
 	{
-		board[i] = Piece(hex_setup[i]);
+		board[i] = Piece(setup[i]);
 	}
+
+	black_can_long_castle = bool((info >> 4) & 1);
+	black_can_short_castle = bool((info >> 3) & 1);
+	white_can_long_castle = bool((info >> 2) & 1);
+	white_can_short_castle = bool((info >> 1) & 1);
+	turn_to_move = (info & 1);
+    std::cout << "black_can_long_castle: " << black_can_long_castle << std::endl;
+    std::cout << "black_can_short_castle: " << black_can_short_castle << std::endl;
+    std::cout << "white_can_long_castle: " << white_can_long_castle << std::endl;
+    std::cout << "white_can_short_castle: " << white_can_short_castle << std::endl;
+    std::cout << "turn_to_move: " << turn_to_move << std::endl;
 }
 
-Board::Board(const char *hex_setup)
+Board::Board(const char *setup, const char info)
 {
-	set(hex_setup);
+	set(setup, info);
 }
 
 Board::Board()
 {
-	set(BASEPOS);
-
-	init();
+	/*	5th bit = black_can_long_castle
+		4th bit = black_can_short_castle
+		3rd bit = black_can_short_castle
+		2nd bit = black_can_long_castle
+		1st bit = turn_to_move
+	*/
+	set(BASEPOS, 0b10111);
 }
 
 void Board::print(bool color)
@@ -55,8 +64,6 @@ void Board::print(bool color)
 					std::cout << "|" << (i/8);
 				std::cout  << std::endl;	
 			}
-			if (this->board[(int(i/8)*8) + 7-(i%8)].color == false)
-				display = toupper(display);
 			std::cout << display << " ";
 	
 		}
@@ -73,8 +80,6 @@ void Board::print(bool color)
 			display = this->board[(int((i-1)/8)*8) + 7 -((i-1)%8)].piece;
 			if (i%8 == 0)
 				std::cout << std::endl << int(i/8) << "| ";
-			if (this->board[(int((i-1)/8)*8) + 7 -((i-1)%8)].color == false)
-				display = toupper(display);
 			std::cout << display << " ";
 		}
 		std::cout << std::endl <<  "------------------" << std::endl;
@@ -125,14 +130,25 @@ Piece& Board::at(const char *pos)
 }
 
 // Move a piece on the board
-Board& Board::move(const char *move)
+Board& Board::move(const char *move_str)
 {
-	const char *from = substr(move,0,2);
-	const char *to = substr(move,2,4);
+	string move(move_str);
+	cout << "LA STRING EST : " << move  << endl;
+
+	char from[3];
+	strncpy(from, move.c_str(), 2);
+	from[2] = 0;
+	//const char *from = move.substr(0,2).c_str();
+	//const char *to = move.substr(2,4).c_str();
+	char to[3];
+	strncpy(to, move.c_str() + 2,  2);
+	from[2] = 0;
+	
+	cout << "FROM : " << from << " TO : " << to << endl;
 	Piece piece = this->at(from); 
 	this->at(from) = Piece();
 	this->at(to) = piece;
-	move_list.add_last(move);
+	move_list.add_last(move_str);
 	return (*this);
 }
 
@@ -201,7 +217,7 @@ unsigned const char Board::case_to_num(const char *pos)
 	return (result);
 }
 
-unsigned const char *Board::num_to_case(unsigned const char index)
+unsigned const char *Board::num_to_case(char index)
 {
 	return (squares[index]);
 }

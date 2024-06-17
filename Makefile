@@ -1,7 +1,6 @@
 SRCDIR		=	./srcs/
 INCDIR		=	./includes/
 SRCNAME		= 	Pieces.cpp		\
-				utils.cpp 		\
 				Board.cpp		\
 				main.cpp		\
 
@@ -35,7 +34,7 @@ fclean:								## Supprime la Bibliotheque Statique et ses fichiers objet
 			rm -f ${NAME}
 
 
-re:			fclean all   			## Supprime et recompile la Bibliotheque Smaketatique avec ses fichiers objets
+re:			fclean all   			## Supprime et recompile la Bibliotheque Statique avec ses fichiers objets
 
 x:			all clean
 
