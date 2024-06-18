@@ -1,4 +1,4 @@
-
+#include "../includes/Game.hpp"
 #include "../includes/Board.hpp"
 
 
@@ -7,23 +7,21 @@ int main()
 {
 
 	Board board;
+	Game game (board);
 	// make a move
-	board.move("h2h4");
+	game.board.move("h2h4");
+	board.move("g7g5");
 	
+	game.board.turn_to_move = BLACK;
 	// print the board from white perspective
-	board.print(WHITE);
-
+	game.board.advanced_print(WHITE);
+	cout << "EVAL : " << game.eval() << endl;
 	// 
-	board.move_list.print();
-	cout << "aled : " <<  board.squares[7] << endl;
-	cout << +board.case_to_num("h8") << endl;
-	cout << board.num_to_case(11) << endl;
 
-	List<t_move> moves = board.get_vertical_moves("d2");
+	List<t_move> moves = game.board.get_moves(WHITE);
 	for  (int i = 0; i < moves.size(); i++)
 	{
-		cout << moves.at(i).from << " ";
-		cout << moves.at(i).to << endl;
+		cout << moves.at(i).from << " " << moves.at(i).to << endl;
 	}
 
 }

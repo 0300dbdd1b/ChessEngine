@@ -2,9 +2,11 @@
 # define __BOARD__
 
 # include <cstring>
+# include <set>
 # include "./Pieces.hpp"
 # include "./List.hpp"
 
+using namespace std;
 class Board
 {
 	public:
@@ -14,6 +16,7 @@ class Board
 		~Board();
 		void set(const char *setup, const char info=0b01111);		// Setup the Board with determined position
 		void print(bool color);					// Print the Board, 0 for the white PoV - 1 for the black PoV
+		void advanced_print(bool color);
 		bool square_color(const char pos);
 		bool square_color(const char *pos);		// Get the color of a square
 		Piece& at(const char index);
@@ -21,8 +24,21 @@ class Board
 		Board& move(const char *move);
 		unsigned const char case_to_num(const char *pos);
 		unsigned const char *num_to_case(char index);
+		
+		List<t_move>get_legal_moves(bool side);
+		List<t_move>get_moves(bool side);
+		List<t_move>get_moves(const char *post);
+		List<t_move>get_diagonal_moves(const char *pos);
 		List<t_move>get_vertical_moves(const char *pos); 
-	private:
+		List<t_move>get_horizontal_moves(const char *pos);
+		List<t_move>get_knight_moves(const char *pos);
+		List<t_move>get_pawn_moves(const char *pos);
+		List<t_move>get_king_moves(const char *pos);
+		List<t_move>get_queen_moves(const char *pos);
+		List<t_move>get_rook_moves(const char *pos);
+		void compute_control_and_captures(bool side, int &controlled_squares, int &captured_pieces);
+		
+		double eval();
 		const char *hex_setup;
 		bool turn_to_move;
 		bool black_can_long_castle;
@@ -31,9 +47,8 @@ class Board
 		bool white_can_short_castle;
 
 		Piece board[64];
-
+ 
 		void init(void);
-		const char *get_pawn_move(const char *pos);
 		//List<const char *> get_slider_move(const char *pos);
 	public:
 		unsigned const char squares[64][3] = {

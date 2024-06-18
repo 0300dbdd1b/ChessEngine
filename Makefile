@@ -2,6 +2,7 @@ SRCDIR		=	./srcs/
 INCDIR		=	./includes/
 SRCNAME		= 	Pieces.cpp		\
 				Board.cpp		\
+				Game.cpp		\
 				main.cpp		\
 
 

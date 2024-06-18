@@ -1,5 +1,6 @@
 #include "../includes/Pieces.hpp"
 #include <cctype>
+#include <cstddef>
 #include <cstring>
 #include <iostream>
 
