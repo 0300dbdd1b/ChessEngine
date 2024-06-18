@@ -11,16 +11,22 @@ SRCS		= 	${addprefix ${SRCDIR}, ${SRCNAME}}
 OBJS		= 	${SRCS:.cpp=.o}
 
 CC			= 	g++ 
-CFLAGS 		=	-std=c++11 -Wall  -Wextra
+CFLAGS 		=	-std=c++11 -Wall -Wextra 
+
+
+
+DEFINES     =   -D PIECES='".PRNBQKprnbqk"'
+
+CXXFLAGS	= ${CFLAGS} ${DEFINES}
 
 .cpp.o        :	${SRCS}
-				${CC} ${CFLAGS} -c -I ${INCDIR} $< -o ${<:.cpp=.o}
+				${CC} ${CXXFLAGS} -c -I ${INCDIR} $< -o ${<:.cpp=.o}
 
 
 NAME		= 	chess
 
 $(NAME) 	: 	${OBJS} 
-				$(CC) $(CFLAGS) -o $(NAME) -I $(INCDIR) $(OBJS) 
+				$(CC) $(CXXFLAGS) -o $(NAME) -I $(INCDIR) $(OBJS) 
 
 
 
