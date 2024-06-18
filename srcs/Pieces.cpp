@@ -29,6 +29,12 @@ Piece::Piece()
 
 }
 
+Piece::Piece( const Piece &piece)
+{
+	this->piece = piece.piece;
+	this->color = piece.color;
+}
+
 Piece::Piece(unsigned char c)
 {
 
@@ -43,14 +49,6 @@ Piece Piece::operator=(const Piece &piece)
 	return (*this);
 }
 
-void Piece::move(const t_move move)
-{
-	
-	return;
-}
 
-t_move * Piece::get_knight_moves(const char *pos)
-{
-	t_move *a;
-	return a;
-}
+
+

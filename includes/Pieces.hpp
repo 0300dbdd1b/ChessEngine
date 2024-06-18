@@ -40,8 +40,8 @@ constexpr char BASEPOS[] =
 
 typedef struct s_move
 {
-	const unsigned char *from;
-	const unsigned char *to;
+	const char *from;
+	const char *to;
 }t_move;
 
 class Piece
@@ -54,6 +54,7 @@ class Piece
 	Piece(unsigned char c);
 	bool decode(unsigned char c);
 	Piece operator=(const Piece &piece);
+	Piece(const Piece &piece);
 	void move(const t_move move);
 	t_move *get_knight_moves(const char *pos);
 };

@@ -182,26 +182,13 @@ Piece& Board::at(const char *pos)
 }
 
 // Move a piece on the board
-Board& Board::move(const char *move_str)
+Board& Board::move(t_move &move)
 {
-	string move(move_str);
-	
-	cout << "LA STRING EST : " << move  << endl;
-	char from[3];
-	strncpy(from, move.c_str(), 2);
-	from[2] = 0;
-	//const char *from = move.substr(0,2).c_str();
-	//const char *to = move.substr(2,4).c_str();
-	char to[3];
-	strncpy(to, move.c_str() + 2,  2);
-	to[2] = 0;
-	
-	cout << "FROM : " << from << " TO : " << to << endl;
-	this->at(to) = this->at(from);
-	this->at(from) = Piece();
+	this->at(move.to) = this->at(move.from);
+	this->at(move.from) = Piece();
 
-	move_list.add_last(move_str);
-	this->turn_to_move = !this->at(to).color;
+	move_list.add_last(move);
+	this->turn_to_move = !this->at(move.to).color;
 	return (*this);
 }
 
@@ -224,7 +211,7 @@ List<t_move>Board::get_vertical_moves(const char *pos)
 	for (char i = index+8; i < 64; i+=8)
 	{
 
-		move.from = (const unsigned char*)pos;
+		move.from = pos;
 		move.to = num_to_case(i);
 		if (at(i).piece == EMPTY)
 		{
@@ -239,7 +226,7 @@ List<t_move>Board::get_vertical_moves(const char *pos)
 	for (char i = index-8; i < 64; i-=8)
 	{
 
-		move.from = (const unsigned char*)pos;
+		move.from = pos;
 		move.to = num_to_case(i);
 		if (at(i).piece == EMPTY)
 		{
@@ -266,7 +253,7 @@ List<t_move> Board::get_horizontal_moves(const char* pos) {
 
     for (char i : {index + 1, index - 1}) {
         while (i >= row_start && i <= row_end) {
-            move.from = (const unsigned char*)pos;
+            move.from = pos;
             move.to = num_to_case(i);
             if (at(i).piece == EMPTY) {
                 output.add_last(move);
@@ -298,7 +285,7 @@ List<t_move> Board::get_diagonal_moves(const char* pos) {
         col = index % 8;
         for (int i = 1; row + i * dir[0] < 8 && row + i * dir[0] >= 0 && col + i * dir[1] < 8 && col + i * dir[1] >= 0; ++i) {
             target_index = (row + i * dir[0]) * 8 + (col + i * dir[1]);
-            move.from = (const unsigned char*)pos;
+            move.from = pos;
             move.to = num_to_case(target_index);
             if (at(target_index).piece == EMPTY) {
                 output.add_last(move);
@@ -330,7 +317,7 @@ List<t_move> Board::get_knight_moves(const char* pos) {
         int new_col = col + move_dir[1];
         if (new_row >= 0 && new_row < 8 && new_col >= 0 && new_col < 8) {
             int target_index = new_row * 8 + new_col;
-            move.from = (const unsigned char*)pos;
+            move.from = pos;
             move.to = num_to_case(target_index);
             if (at(target_index).piece == EMPTY || at(target_index).color != color) {
                 output.add_last(move);
@@ -352,12 +339,12 @@ List<t_move> Board::get_pawn_moves(const char* pos) {
     int col = index % 8;
     int direction = color == WHITE ? 1 : -1;
     int start_row = color == WHITE ? 1 : 6;
-    int end_row = color == WHITE ? 7 : 0;
+    //int end_row = color == WHITE ? 7 : 0;
     
     // Forward move
     int forward_index = index + direction * 8;
     if (forward_index >= 0 && forward_index < 64 && at(forward_index).piece == EMPTY) {
-        move.from = (const unsigned char*)pos;
+        move.from = pos;
         move.to = num_to_case(forward_index);
         output.add_last(move);
 
@@ -378,7 +365,7 @@ List<t_move> Board::get_pawn_moves(const char* pos) {
         int new_col = col + (i == 0 ? 1 : -1);
         if (capture_index >= 0 && capture_index < 64 && new_col >= 0 && new_col < 8) {
             if (at(capture_index).piece != EMPTY && at(capture_index).color != color) {
-                move.from = (const unsigned char*)pos;
+                move.from = pos;
                 move.to = num_to_case(capture_index);
                 output.add_last(move);
             }
@@ -430,7 +417,7 @@ List<t_move> Board::get_king_moves(const char* pos) {
         int new_col = col + move_dir[1];
         if (new_row >= 0 && new_row < 8 && new_col >= 0 && new_col < 8) {
             int target_index = new_row * 8 + new_col;
-            move.from = (const unsigned char*)pos;
+            move.from = pos;
             move.to = num_to_case(target_index);
             if (at(target_index).piece == EMPTY || at(target_index).color != color) {
                 output.add_last(move);
@@ -509,10 +496,10 @@ List<t_move> Board::get_moves(bool side)
         if  ((piece.piece != EMPTY) && ((side == WHITE && piece.color == WHITE) || (side == BLACK && piece.color == BLACK))) 
 		{
             // Convert index to position string
-            const unsigned char* pos = num_to_case(i);
+            const char* pos = num_to_case(i);
 			//cout << "LA POSITION EST " << pos << endl;
-            List<t_move> piece_moves = get_moves(reinterpret_cast<const char *>(pos));
-            for (int j = 0; j < piece_moves.size(); ++j) 
+            List<t_move> piece_moves = get_moves(pos);
+            for (size_t j = 0; j < piece_moves.size(); ++j) 
 			{
                 all_moves.add_last(piece_moves.at(j));
             }
@@ -522,16 +509,16 @@ List<t_move> Board::get_moves(bool side)
 }
 
 
-unsigned const char Board::case_to_num(const char *pos)
+char Board::case_to_num(const char *pos)
 {
-	unsigned char col = pos[0] - 'a';
-	unsigned char row = pos[1] - '0' - 1;
-	unsigned const char result = row * 8 + col;
+	char col = pos[0] - 'a';
+	char row = pos[1] - '0' - 1;
+	char result = row * 8 + col;
 	return (result);
 }
 
-unsigned const char* Board::num_to_case(char index) {
-	return this->squares[index];
+const char* Board::num_to_case(char index) {
+	return this->squares[static_cast<unsigned char>(index)];
 }
 
 void Board::compute_control_and_captures(bool side, int &controlled_squares, int &captured_pieces) 

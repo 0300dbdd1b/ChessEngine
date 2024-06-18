@@ -10,7 +10,7 @@ using namespace std;
 class Board
 {
 	public:
-		List<const char *> move_list;
+		List<t_move> move_list;
 		Board();
 		Board(const char *setup, const char info=0b01111);
 		~Board();
@@ -21,9 +21,9 @@ class Board
 		bool square_color(const char *pos);		// Get the color of a square
 		Piece& at(const char index);
 		Piece& at(const char *pos);				// Returns the Piece in a determined square	
-		Board& move(const char *move);
-		unsigned const char case_to_num(const char *pos);
-		unsigned const char *num_to_case(char index);
+		Board& move(t_move &move);
+		char case_to_num(const char *pos);
+		const char *num_to_case(char index);
 		
 		List<t_move>get_legal_moves(bool side);
 		List<t_move>get_moves(bool side);
@@ -51,7 +51,7 @@ class Board
 		void init(void);
 		//List<const char *> get_slider_move(const char *pos);
 	public:
-		unsigned const char squares[64][3] = {
+		const char squares[64][3] = {
 			"a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1",
 			"a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2",
 			"a3", "b3", "c3", "d3", "e3", "f3", "g3", "h3",
