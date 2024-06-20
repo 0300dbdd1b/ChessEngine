@@ -15,7 +15,7 @@ CFLAGS 		=	-std=c++11 -Wall -Wextra
 
 
 
-DEFINES     =   -D PIECES='".PRNBQKprnbqk"'
+DEFINES     =   -D PIECES='" PRNBQKprnbqk"'
 
 CXXFLAGS	= ${CFLAGS} ${DEFINES}
 

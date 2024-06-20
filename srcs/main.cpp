@@ -9,9 +9,14 @@ int main()
 	Board board;
 	Game game (board);
 	// make a move
-	t_move move {"h2" ,"h4"};
-	game.board.move(move);
+	t_move move1 {"h2" ,"h4"};
+	t_move move2 {"g7" ,"g5"};
+
+	t_move move3 {"h4" ,"g5"};
 	//board.move("g7g5");
+	game.board.move(move1);
+	game.board.move(move2);
+	game.board.move(move3);
 	
 	// print the board from white perspective
 	game.board.advanced_print(WHITE);

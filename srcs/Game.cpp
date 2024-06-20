@@ -29,6 +29,8 @@ int Game::eval() {
 
 
     // Compute control and captures for white
+	cout << "EVAL :\n" << "WHITE CONTROLLED : " << white_controlled_squares << "\nWHITE_CAPTURE : " << white_captured_pieces << endl;
+	cout << "BLACK CONTROLLED : " << black_controlled_squares << "\nBLACK_CAPTURE : " << black_captured_pieces << endl;
     compute_control_and_captures(WHITE, white_controlled_squares, white_captured_pieces);
 
     // Compute control and captures for black
